@@ -1,7 +1,42 @@
+
+
+
+
 {% extends "base.html" %}
 {% block head_title %}Add Car{% endblock %}
 {% block content %}
 
+
+<form action="" method="post">
+{% csrf_token %}
+Title
+<br>
+<input type="text" name="title" value="Bmw very good">
+<hr>
+
+Text
+<br>
+<input type="text" name="text" value="Sale 50% for BMW">
+<hr>
+
+Price
+<br>
+<input type="number" name="price" value="100">
+<hr>
+
+
+Brand
+<br>
+<select name="brand">
+    {% for i in brand_car %}
+    <option value="{{ i.id_brand }}">{{ i.name }}</option>
+    {% endfor %}
+</select>
+<hr>
+
+<hr>
+<input type="submit" value="Add" />
+</form>
 
 
 {% endblock %}
