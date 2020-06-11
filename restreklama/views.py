@@ -14,7 +14,6 @@ from .serializers import (
 	detailSerializer,
 	createItemReactSerializer,
 	imageSerializer,
-	detailItemReactSerializer,
 	createItemSerializer,
 
 	createPostSerializer
@@ -64,7 +63,7 @@ from rest_framework.filters import (
 
 
 
-class AddPostCar(APIView):
+class CreateCar(APIView):
 	authentication_classes = (TokenAuthentication, SessionAuthentication)
 	permission_classes = [IsAuthenticated,]
 
@@ -120,7 +119,7 @@ class AddPostCar(APIView):
 
 
 
-class AddPostItem(APIView):
+class CreateItem(APIView):
 	authentication_classes = (TokenAuthentication, SessionAuthentication)
 	permission_classes = [IsAuthenticated,]
 
@@ -259,16 +258,6 @@ class EditPost(APIView):
 
 
 
-
-
-
-
-
-
-
-
-
-
 class ProfileListAPIView(ListAPIView):
 	serializer_class = listSerializer
 	pagination_class = PostPageNumberPagination
@@ -301,83 +290,3 @@ class DetailApiView(RetrieveAPIView):
 	serializer_class = detailSerializer
 	lookup_field = 'id'
 
-
-
-class CreateItemSApiView(APIView):
-	authentication_classes = (TokenAuthentication, SessionAuthentication)
-
-	def post(self, request, format=None):
-		serializer = createItemSerializer(data=request.data)
-
-		if serializer.is_valid():
-			
-			user=self.request.user
-			area_id = area=serializer.data['area']
-			area_my = Area.objects.get(pk = area_id)
-
-			group_id = area=serializer.data['group']
-			group_my = Group.objects.get(pk = group_id)
-
-			new_item = Item(
-				area = area_my,
-				group = group_my,
-				title=serializer.data['title'],
-				description=serializer.data['description'],
-				price=serializer.data['price'],
-				is_active = serializer.data['is_active'],
-				user = user
-				)
-			new_item.save()
-
-
-			for f in request.data.getlist('files'):
-				mf = Image.objects.create(item=new_item, file=f)
-				ThumbnailsImage.objects.create(image = mf, avatar_thumbnail=f)
-
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class CreateItemApiView(APIView):
-# 	authentication_classes = (TokenAuthentication, SessionAuthentication)
-
-
-
-# 	def post(self, request, format=None):
-# 		serializer = createItemSerializer(data=request.data)
-
-# 		if serializer.is_valid():
-			
-# 			user=self.request.user
-# 			area_id = area=serializer.data['area']
-# 			area_my = Area.objects.get(pk = area_id)
-
-# 			group_id = area=serializer.data['group']
-# 			group_my = Group.objects.get(pk = group_id)
-
-# 			new_item = Item(
-# 				area = area_my,
-# 				group = group_my,
-# 				title=serializer.data['title'],
-# 				description=serializer.data['description'],
-# 				price=serializer.data['price'],
-# 				is_active = serializer.data['is_active'],
-# 				user = user
-# 				)
-# 			new_item.save()
-
-
-# 			my_type = ItemType.objects.get(pk = 1)
-
-# 			new_car = ItemMy(item = new_item, item_type = my_type)
-# 			new_car.save()
-
-
-# 			for f in request.data.getlist('files'):
-# 				mf = Image.objects.create(item=new_item, file=f)
-# 				ThumbnailsImage.objects.create(image = mf, avatar_thumbnail=f)
-
-# 			return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

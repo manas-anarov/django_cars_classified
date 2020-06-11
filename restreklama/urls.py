@@ -3,8 +3,8 @@ from django.conf.urls import url
 from django.urls import path
 
 urlpatterns = [
-	path('add/car/', views.AddPostCar.as_view(), name='add-car'),
-	path('add/item/', views.AddPostItem.as_view(), name='add-item'),
+	path('add/car/', views.CreateCar.as_view(), name='create-car'),
+	path('add/item/', views.CreateItem.as_view(), name='create-item'),
 	path('list/', views.ListAPIView.as_view(), name='list'),
 	path('detail/<id>/', views.DetailApiView.as_view(), name='detail'),
 	path('profile/list/', views.ProfileListAPIView.as_view(), name='profile-list'),
