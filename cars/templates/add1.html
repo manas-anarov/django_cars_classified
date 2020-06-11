@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}Add Vacancy{% endblock %}
+{% block content %}
+<div class="container">
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+
+
+Category
+<br>
+<select name="category">
+    {% for i in post_category %}
+    <option value="{{ i.id_category }}">{{ i.name }}</option>
+    {% endfor %}
+</select>
+<hr>
+
+<input type="submit" value="Add" />
+</form>
+<hr>
+</div>
+
+{% endblock %}

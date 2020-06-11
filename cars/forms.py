@@ -6,3 +6,8 @@ class AddForm(forms.ModelForm):
 	class Meta:
 		model = Car
 		exclude = [""]
+
+class ListForm(forms.ModelForm):
+	class Meta:
+		model = Car
+		exclude = [""]

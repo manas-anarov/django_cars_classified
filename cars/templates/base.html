@@ -21,25 +21,44 @@
 
 <ul class="nav justify-content-center">
   <li class="nav-item">
-    <a class="nav-link active" href="">Cars Classidide</a>
+    <a class="nav-link active" href="{% url 'car:list'%}">Cars Classifide</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'car:category' 1 %}">Merc</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'car:category' 2 %}">Honda</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="">Toyota</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Merc</a>
-  </li>
-  <li class="nav-item">
     <a class="nav-link" href="">BMW</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="">Honda</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="">Subaru</a>
   </li>
+
+  
+  
+  {% if request.user.is_authenticated %}
   <li class="nav-item">
-    <a class="nav-link" href="">Lexus</a>
+    <a class="nav-link" href="{% url 'accounts:logout'%}">Logout</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'profiles:list'%}">Profile</a>
+  </li>
+  {% else %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'accounts:register'%}">Register</a>
+  </li>
+  
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'accounts:login'%}">Login</a>
+    </li>
+  {% endif %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'car:add'%}">ADD</a>
   </li>
 
 

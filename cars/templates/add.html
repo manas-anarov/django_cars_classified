@@ -1,42 +1,54 @@
 
 
 
-
 {% extends "base.html" %}
-{% block head_title %}Add Car{% endblock %}
+{% load crispy_forms_tags %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 {% block content %}
 
 
-<form action="" method="post">
-{% csrf_token %}
-Title
-<br>
-<input type="text" name="title" value="Bmw very good">
-<hr>
 
-Text
-<br>
-<input type="text" name="text" value="Sale 50% for BMW">
-<hr>
-
-Price
-<br>
-<input type="number" name="price" value="100">
-<hr>
+<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
 
 
-Brand
-<br>
-<select name="brand">
-    {% for i in brand_car %}
-    <option value="{{ i.id_brand }}">{{ i.name }}</option>
-    {% endfor %}
-</select>
-<hr>
+    {{ form.title|as_crispy_field}}
+	{{ form.text|as_crispy_field}}
+	{{ form.brand|as_crispy_field}}
+	
+	<div class="row">
+		<div class="col-md-8">
+			{{ form.price|as_crispy_field}}
+			
+		</div>
+		<div class="col-md-4">
+			{{ form.currency|as_crispy_field}}
+		</div>
 
-<hr>
-<input type="submit" value="Add" />
+	</div>
+	{{ form.year|as_crispy_field}}
+	<hr>
+	<div class="row">
+		<div class="col-md-4">{{ form.car_pic|as_crispy_field}}</div>
+		<div class="col-md-4">{{ form.car_pic2|as_crispy_field}}</div>
+		<div class="col-md-4">{{ form.car_pic3|as_crispy_field}}</div>
+		
+	</div>
+    <center><button class="btn btn-success" type="submit">Save</button></center>
+    <br>
 </form>
+
+
+
+
+
 
 
 {% endblock %}

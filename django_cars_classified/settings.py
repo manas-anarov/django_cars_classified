@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
+CSRF_COOKIE_NAME = "XCSRF-TOKEN"
 
 import os
 
@@ -39,7 +40,36 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cars'
+    'django.contrib.sites',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
+    
+    'cars',
+    'accounts',
+    'myprofile',
+
+    'restcars',
+    'restaccounts',
+    'restprofile',
+
+    'restreklama',
+
+
+    'crispy_forms',
+
+    'corsheaders',
+
+    # External applications required by Django Classified
+    'bootstrapform',
+    'sorl.thumbnail',
+            
+    # Django Classified
+    'django_classified',
+
+
+    'comments',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +80,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
+
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware'
 ]
 
 ROOT_URLCONF = 'django_cars_classified.urls'
@@ -61,6 +98,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django_classified.context_processors.common_values',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -121,3 +159,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'cars.DriverUser'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media/'
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+SITE_ID = 1
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+
+
+SITE_URL_FOR_IMAGE = "http://localhost:8000"
