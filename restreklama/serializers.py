@@ -246,10 +246,11 @@ class newCreateItemSerializer(ModelSerializer):
 
 
 
-class createItemReactSerializer(ModelSerializer):
+class createCarSerializer(ModelSerializer):
 	item = newCreateItemSerializer(required=False)
 	year = serializers.IntegerField(write_only=True)  
-	car_type = serializers.IntegerField(write_only=True)  
+	car_type = serializers.IntegerField(write_only=True)
+	# post_type = serializers.IntegerField(write_only=True)
 	class Meta:
 		model = ItemMy
 		fields = [

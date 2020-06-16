@@ -10,12 +10,14 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import (
+
+	createCarSerializer,
+
+
 	listSerializer,
 	detailSerializer,
-	createItemReactSerializer,
 	imageSerializer,
 	createItemSerializer,
-
 	createPostSerializer
 	)
 
@@ -68,7 +70,7 @@ class CreateCar(APIView):
 	permission_classes = [IsAuthenticated,]
 
 	def post(self, request, format=None):
-		serializer = createItemReactSerializer(data=request.data)
+		serializer = createCarSerializer(data=request.data)
 
 		if serializer.is_valid():
 			
@@ -91,16 +93,25 @@ class CreateCar(APIView):
 			new_item.save()
 
 
-			car_type_ser = request.data.get('car_type', 1)
-			car_type_my = CarType.objects.get(pk = car_type_ser)
 
+			# post_type_ser = request.data.get('post_type', 0)
+			# if (post_type_ser == 2):
+			# 	car_type_ser = request.data.get('car_type', 1)
+			# 	car_type_my = CarType.objects.get(pk = car_type_ser)
+			# 	year_ser = request.data.get('year', 1)
+			# 	cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
+			# 	cat_for_car.save()
 
-			year_ser = request.data.get('year', 1)
-
-			cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
-			cat_for_car.save()
 
 			item_type_id = serializer.data['item_type']
+
+			if (item_type_id == 2):
+				car_type_ser = request.data.get('car_type', 1)
+				car_type_my = CarType.objects.get(pk = car_type_ser)
+				year_ser = request.data.get('year', 1)
+				cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
+				cat_for_car.save()
+
 
 			my_type = ItemType.objects.get(pk = item_type_id)
 			new_car = ItemMy(item = new_item, item_type = my_type)
@@ -171,21 +182,49 @@ class ListAPIView(ListAPIView):
 	filter_backends= [SearchFilter, OrderingFilter]
 	search_fields = ['item__title','item__description']
 
-
-
 	def get_queryset(self, *args, **kwargs):
 		queryset_list = ItemMy.objects.all().filter(item__is_active=True).order_by('-id')
-		query = self.request.GET.get("area")
-		brand = self.request.GET.get("brand")
+		query = self.request.GET.get("area", False)
+		brand = self.request.GET.get("brand", False)
+		post_type = self.request.GET.get("post_type", False)
 		if query:
 			queryset_list = queryset_list.filter(
 					Q(item__area__id__icontains=query)
 					).distinct()
 		if brand:
+
+
 			queryset_list = queryset_list.filter(
 					Q(car_type__id__icontains=brand)
 					).distinct()
+
+
+		#query_string_to_int
+		if post_type:
+			post_type_query = self.request.GET.get('post_type')
+			post_type_converted = int(post_type_query)
+
+			queryset_list = queryset_list.filter(
+					Q(item_type__id__icontains=post_type)
+				).distinct()	
+
 		return queryset_list
+
+
+
+
+# class Reviews(models.Model):
+#     subject_user = models.ForeignKey(User,related_name='reviewed_user')
+#     actor = models.ForeignKey(User)                         ## irrelavent 
+#     text = models.TextField()
+
+# class Friendship(models.Model):
+#     head_user = models.ForeignKey(User,related_name='followed')
+#     tail_user = models.ForeignKey(User)                     ## irrelavent
+
+
+# heads = (f.head_user for f in Friendship.objects.all())
+# reviews = Reviews.objects.all().filter("subject_user__in"=heads)
 
 
 
