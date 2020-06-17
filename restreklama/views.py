@@ -94,22 +94,15 @@ class CreateCar(APIView):
 
 
 
-			# post_type_ser = request.data.get('post_type', 0)
-			# if (post_type_ser == 2):
-			# 	car_type_ser = request.data.get('car_type', 1)
-			# 	car_type_my = CarType.objects.get(pk = car_type_ser)
-			# 	year_ser = request.data.get('year', 1)
-			# 	cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
-			# 	cat_for_car.save()
-
-
 			item_type_id = serializer.data['item_type']
 
-			if (item_type_id == 2):
+			if (item_type_id == 1):
+
 				car_type_ser = request.data.get('car_type', 1)
 				car_type_my = CarType.objects.get(pk = car_type_ser)
 				year_ser = request.data.get('year', 1)
 				cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
+				print(cat_for_car)
 				cat_for_car.save()
 
 
@@ -191,13 +184,13 @@ class ListAPIView(ListAPIView):
 			queryset_list = queryset_list.filter(
 					Q(item__area__id__icontains=query)
 					).distinct()
+
+		#search brand and ItemMy, if item is equal show all ItemMy
 		if brand:
-
-
+			brand_sort = (f.item for f in CategoryForCar.objects.all().filter(car_type_id=brand))
 			queryset_list = queryset_list.filter(
-					Q(car_type__id__icontains=brand)
+					Q(item__in=brand_sort)
 					).distinct()
-
 
 		#query_string_to_int
 		if post_type:
@@ -213,18 +206,6 @@ class ListAPIView(ListAPIView):
 
 
 
-# class Reviews(models.Model):
-#     subject_user = models.ForeignKey(User,related_name='reviewed_user')
-#     actor = models.ForeignKey(User)                         ## irrelavent 
-#     text = models.TextField()
-
-# class Friendship(models.Model):
-#     head_user = models.ForeignKey(User,related_name='followed')
-#     tail_user = models.ForeignKey(User)                     ## irrelavent
-
-
-# heads = (f.head_user for f in Friendship.objects.all())
-# reviews = Reviews.objects.all().filter("subject_user__in"=heads)
 
 
 

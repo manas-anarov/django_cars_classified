@@ -248,9 +248,8 @@ class newCreateItemSerializer(ModelSerializer):
 
 class createCarSerializer(ModelSerializer):
 	item = newCreateItemSerializer(required=False)
-	year = serializers.IntegerField(write_only=True)  
-	car_type = serializers.IntegerField(write_only=True)
-	# post_type = serializers.IntegerField(write_only=True)
+	year = serializers.IntegerField(write_only=True, required=False)  
+	car_type = serializers.IntegerField(write_only=True, required=False)
 	class Meta:
 		model = ItemMy
 		fields = [
