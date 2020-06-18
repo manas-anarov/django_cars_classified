@@ -11,7 +11,7 @@ django-pagedown==1.0.6
 django-registration==3.0
 djangorestframework==3.9.0
 extras==1.0.0
-httpie==0.9.9
+httpie==1.0.3
 idna==2.7
 oauthlib==2.1.0
 Pillow==5.4.1
