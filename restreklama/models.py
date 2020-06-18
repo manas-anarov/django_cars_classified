@@ -8,21 +8,12 @@ from django.contrib.contenttypes.models import ContentType
 
 
 
-# class Item(models.Model):
-#     image = ImageField(upload_to='whatever')
-
 
 class CarType(models.Model):
 	name = models.CharField(_('name'), max_length=100)
 
 	def __str__(self):
 		return self.name
-
-
-class ItemReact(models.Model):
-	item = models.ForeignKey(Item, on_delete=models.CASCADE)
-	car_type = models.ForeignKey(CarType, on_delete=models.CASCADE)
-	year = models.PositiveSmallIntegerField(blank=True, null=True)
 
 
 
@@ -45,8 +36,6 @@ class CategoryForCar(models.Model):
 	car_type = models.ForeignKey(CarType, on_delete=models.CASCADE)
 	year = models.PositiveSmallIntegerField(blank=True, null=True)
 	item = models.ForeignKey(Item, on_delete=models.CASCADE)
-
-
 
 
 

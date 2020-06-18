@@ -47,10 +47,6 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     
     'cars',
-    'accounts',
-    'myprofile',
-
-    'restcars',
     'restaccounts',
     'restprofile',
 

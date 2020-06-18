@@ -8,11 +8,11 @@ from cars.models import Brand
 from cars.models import DriverUser
 
 from django_classified.models import Item, Image, Area, Group
-from .models import ItemReact, CarType
+from .models import CarType
 from sorl.thumbnail import get_thumbnail
 
 from .models import ThumbnailsImage
-from .models import ItemReact, CarType, ThumbnailsImage, ItemType, ItemMy, CategoryForCar
+from .models import CarType, ThumbnailsImage, ItemType, ItemMy, CategoryForCar
 
 from django.conf import settings
 
@@ -48,24 +48,24 @@ class imageSliderSerializer(ModelSerializer):
 		fields = [
 			'original',
 			'thumbnail',
-
-
+			'id'
 		]
 
 	def get_original(self, obj):
-		all_images = Image.objects.filter(item=obj.item)
+		all_images = Image.objects.filter(pk=obj.id)
 		if all_images.exists():
-			big_image = Image.objects.filter(item=obj.item).first()
+			big_image = Image.objects.filter(pk=obj.id).first()
 			final_image_url = settings.SITE_URL_FOR_IMAGE + big_image.file.url
 			return final_image_url
 
 		else:
 			return "/media/none/no-img.jpg"
 
+
 	def get_thumbnail(self, obj):
-		all_images = Image.objects.filter(item=obj.item)
+		all_images = Image.objects.filter(pk=obj.id)
 		if all_images.exists():
-			big_image = Image.objects.filter(item=obj.item).first()
+			big_image = Image.objects.filter(pk=obj.id).first()
 			sub = ThumbnailsImage.objects.filter(image = big_image).first()
 
 			final_image_url = settings.SITE_URL_FOR_IMAGE + sub.avatar_thumbnail.url
@@ -73,14 +73,6 @@ class imageSliderSerializer(ModelSerializer):
 		else:
 			return "/media/none/no-img.jpg"
 
-
-	# def get_photo_url(self, car):
-	# 	request = self.context.get('request')
-	# 	if photo and hasattr(photo, 'url'):
-	# 		photo_url = car.photo.url
-	# 		return request.build_absolute_uri(photo_url)
-	# 	else:
-	# 		return None
 
 
 
@@ -111,7 +103,8 @@ class detailSerializer(ModelSerializer):
 			'car_type',
 			'car_type_name',
 			'images',
-			'images_slider'
+			'images_slider',
+			'item_type'
 		]
 
 	def get_image_main(self, obj):
@@ -138,15 +131,14 @@ class detailSerializer(ModelSerializer):
 
 		view = self.context.get('view')
 		item_r_getted_id = view.kwargs['id'] if view else None
-		# print(item_r_getted_id)
 
 		item_r_getted = ItemMy.objects.filter(pk = item_r_getted_id)
 		if item_r_getted.exists():
-		# if item_r_getted:
 			item_r_getted = ItemMy.objects.filter(pk = item_r_getted_id).first()
 			item_getted = item_r_getted.item
 
 			all_pics = Image.objects.filter(item=item_getted)
+			print(all_pics)
 			model2_serializer = imageSerializer(all_pics, many=True)
 			return model2_serializer.data
 		else:
@@ -154,23 +146,30 @@ class detailSerializer(ModelSerializer):
 
 
 	def get_year(self, obj):
-		all_images = CategoryForCar.objects.get(item=obj.item)
-
-		return all_images.year
+		if (obj.item_type == 2):
+			all_images = CategoryForCar.objects.get(item=obj.item)
+			return all_images.year
+		if (obj.item_type != 2):
+			return None
 
 	def get_car_type(self, obj):
-		all_images = CategoryForCar.objects.get(item=obj.item)
-		return all_images.car_type.id
+		if (obj.item_type == 2):
+			all_images = CategoryForCar.objects.get(item=obj.item)
+			return all_images.car_type.id
+		if (obj.item_type != 2):
+			return None
 
 	def get_car_type_name(self, obj):
-		all_images = CategoryForCar.objects.get(item=obj.item)
-		return all_images.car_type.name
+		if (obj.item_type == 2):
+			all_images = CategoryForCar.objects.get(item=obj.item)
+			return all_images.car_type.name
+		if (obj.item_type != 2):
+			return None
 
 
 	def get_images_slider(self, obj):
 		view = self.context.get('view')
 		item_r_getted_id = view.kwargs['id'] if view else None
-		# print(item_r_getted_id)
 
 		item_r_getted = ItemMy.objects.filter(pk = item_r_getted_id)
 		if item_r_getted.exists():

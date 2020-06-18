@@ -1,12 +1,10 @@
 from django.contrib import admin
-from .models import  ItemReact, CarType
+from .models import  CarType
 from django_classified.models import Image
 from .models import  ThumbnailsImage
 
 from .models import  ItemMy, ItemType, CategoryForCar
 
-
-admin.site.register(ItemReact)
 admin.site.register(CarType)
 admin.site.register(Image)
 admin.site.register(ThumbnailsImage)

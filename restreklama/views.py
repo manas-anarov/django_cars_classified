@@ -38,7 +38,7 @@ from rest_framework.permissions import (
 	IsAdminUser,
 	IsAuthenticatedOrReadOnly,
 	)
-from .models import ItemReact, CarType, ThumbnailsImage, ItemType, ItemMy, CategoryForCar
+from .models import CarType, ThumbnailsImage, ItemType, ItemMy, CategoryForCar
 from django_classified.models import Item, Image, Area, Group
 
 
@@ -61,6 +61,7 @@ from rest_framework.filters import (
 		OrderingFilter,
 	)
 
+from .permissions import IsOwnerOrReadOnly
 
 
 
@@ -206,21 +207,17 @@ class ListAPIView(ListAPIView):
 
 
 
-
-
-
-
-
 class EditPost(APIView):
 	authentication_classes = (TokenAuthentication, SessionAuthentication)
+	permission_classes = [IsOwnerOrReadOnly,]
 
 	def put(self, request, *args, **kwargs):
 		item_r_getted_id = kwargs.get('id', 'Default Value if not there')
-		item_r_getted = ItemReact.objects.get(pk = item_r_getted_id)
+		item_r_getted = ItemMy.objects.get(pk = item_r_getted_id)
 		item_getted = item_r_getted.item
 
 
-		serializer = createItemReactSerializer(data=request.data)
+		serializer = createCarSerializer(data=request.data)
 
 		if serializer.is_valid():
 			
@@ -243,15 +240,19 @@ class EditPost(APIView):
 			item_getted.save()
 
 
-			car_type_id = serializer.data['car_type']
-			car_type_my = CarType.objects.get(pk = car_type_id)
-			year_my = serializer.data['year']
+
+			item_type_id = serializer.data['item_type']
+			if (item_type_id == 1):
+
+				car_type_id = serializer.data['car_type']
+				car_type_my = CarType.objects.get(pk = car_type_id)
+				year_my = serializer.data['year']
 
 
-			item_r_getted.item = item_getted
-			item_r_getted.car_type = car_type_my
-			item_r_getted.year = year_my
-			item_r_getted.save()
+				item_r_getted.item = item_getted
+				item_r_getted.car_type = car_type_my
+				item_r_getted.year = year_my
+				item_r_getted.save()
 
 
 			for f in request.data.getlist('files'):
@@ -264,13 +265,13 @@ class EditPost(APIView):
 
 	def get(self, request, *args, **kwargs):
 		item_r_getted_id = kwargs.get('id', '0')
-		item_react = ItemReact.objects.get(pk = item_r_getted_id)
+		item_react = ItemMy.objects.get(pk = item_r_getted_id)
 		serializer = detailSerializer(item_react)
 		return Response(serializer.data)
 
 
 	def delete(self, request, id):
-		article = get_object_or_404(ItemReact.objects.all(), pk=id)
+		article = get_object_or_404(ItemMy.objects.all(), pk=id)
 		article.delete()
 		return Response({
 			"message": "Article with id `{}` has been deleted.".format(id)

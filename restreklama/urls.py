@@ -8,5 +8,5 @@ urlpatterns = [
 	path('list/', views.ListAPIView.as_view(), name='list'),
 	path('detail/<id>/', views.DetailApiView.as_view(), name='detail'),
 	path('profile/list/', views.ProfileListAPIView.as_view(), name='profile-list'),
-	path('edit/<id>/', views.ProfileListAPIView.as_view(), name='edit'),
+	path('edit/<id>/', views.EditPost.as_view(), name='edit'),
 ]
