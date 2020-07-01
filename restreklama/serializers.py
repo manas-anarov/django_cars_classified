@@ -85,7 +85,7 @@ class detailSerializer(ModelSerializer):
 	image_has = serializers.SerializerMethodField('get_has_image')
 	images = serializers.SerializerMethodField('get_picture')
 	year = serializers.SerializerMethodField()
-	car_type = serializers.SerializerMethodField()
+	# car_type = serializers.SerializerMethodField()
 	car_type_name = serializers.SerializerMethodField()
 	images_slider = serializers.SerializerMethodField()
 	class Meta:
@@ -100,7 +100,7 @@ class detailSerializer(ModelSerializer):
 			'image_first',
 			'image_has',
 			'year',
-			'car_type',
+			# 'car_type',
 			'car_type_name',
 			'images',
 			'images_slider',
@@ -138,32 +138,40 @@ class detailSerializer(ModelSerializer):
 			item_getted = item_r_getted.item
 
 			all_pics = Image.objects.filter(item=item_getted)
-			print(all_pics)
 			model2_serializer = imageSerializer(all_pics, many=True)
 			return model2_serializer.data
 		else:
-			return "non"
+			return None
 
 
 	def get_year(self, obj):
-		if (obj.item_type == 2):
-			all_images = CategoryForCar.objects.get(item=obj.item)
-			return all_images.year
+		if (obj.item_type.id == 2):
+			try:
+				cat_for_car = CategoryForCar.objects.get(item=obj.item)
+			except ObjectDoesNotExists:
+				return None
+			else:
+				return cat_for_car.year
+
 		if (obj.item_type != 2):
 			return None
 
-	def get_car_type(self, obj):
-		if (obj.item_type == 2):
-			all_images = CategoryForCar.objects.get(item=obj.item)
-			return all_images.car_type.id
-		if (obj.item_type != 2):
-			return None
+	# def get_car_type(self, obj):
+	# 	if (obj.item_type.id == 2):
+	# 		all_images = CategoryForCar.objects.get(item=obj.item)
+	# 		return all_images.car_type.id
+	# 	if (obj.item_type != 2):
+	# 		return None
 
 	def get_car_type_name(self, obj):
-		if (obj.item_type == 2):
-			all_images = CategoryForCar.objects.get(item=obj.item)
-			return all_images.car_type.name
-		if (obj.item_type != 2):
+		if (obj.item_type.id == 2):
+			try:
+				cat_for_car = CategoryForCar.objects.get(item=obj.item)
+			except ObjectDoesNotExists:
+				return None
+			else:
+				return cat_for_car.car_type.name
+		if (obj.item_type.id != 2):
 			return None
 
 
@@ -181,7 +189,7 @@ class detailSerializer(ModelSerializer):
 
 			return model2_serializer.data
 		else:
-			return "non"
+			return None
 
 		
 

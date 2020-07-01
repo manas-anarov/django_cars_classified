@@ -97,13 +97,12 @@ class CreateCar(APIView):
 
 			item_type_id = serializer.data['item_type']
 
-			if (item_type_id == 1):
+			if (item_type_id == 2):
 
 				car_type_ser = request.data.get('car_type', 1)
 				car_type_my = CarType.objects.get(pk = car_type_ser)
 				year_ser = request.data.get('year', 1)
 				cat_for_car = CategoryForCar(car_type = car_type_my, year = year_ser, item = new_item)
-				print(cat_for_car)
 				cat_for_car.save()
 
 
